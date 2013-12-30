@@ -24,7 +24,9 @@
     "tape": "~2.3.2",
     "testling": "~1.5.6",
     "domy-element": "~0.4.0",
-    "domy-insert": "~0.2.3"
+    "domy-insert": "~0.2.3",
+    "page": "~1.3.7",
+    "domy-children": "~0.2.7"
   },
   "testling": {
     "files": [
@@ -43,6 +45,7 @@
   },
   "dependencies": {
     "domy": "~0.2.4",
-    "domy-element": "~0.4.0"
+    "domy-element": "~0.4.0",
+    "page": "~1.3.7"
   }
 }
