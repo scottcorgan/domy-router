@@ -1,0 +1,48 @@
+{
+  "name": "domy-router",
+  "version": "0.1.0",
+  "description": "URL driven DOM element swapping",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/testling"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scottcorgan/domy-router.git"
+  },
+  "keywords": [
+    "domy",
+    "router",
+    "url"
+  ],
+  "author": "Scott Corgan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/scottcorgan/domy-router/issues"
+  },
+  "devDependencies": {
+    "tape": "~2.3.2",
+    "testling": "~1.5.6",
+    "domy-element": "~0.4.0",
+    "domy-insert": "~0.2.3"
+  },
+  "testling": {
+    "files": [
+      "test/index.js"
+    ],
+    "browsers": [
+      "iexplore/10.0",
+      "iexplore/9.0",
+      "firefox/16..latest",
+      "chrome/22..latest",
+      "safari/5.1..latest",
+      "ipad/6.0..latest",
+      "iphone/6.0..latest",
+      "android-browser/4.2..latest"
+    ]
+  },
+  "dependencies": {
+    "domy": "~0.2.4",
+    "domy-element": "~0.4.0"
+  }
+}
