@@ -98,8 +98,8 @@ Route.prototype._renderTemplates = function (ctx) {
   
   // Set up parent
   // reset child templates rendered value
-  this.router.resetRenderedChildren(this.options.parent);
   if (this.options.parent) this.options.parent._trigger(ctx, false);
+  this.router.resetRenderedChildren(this.options.parent);
   
   Object.keys(this.templates).forEach(this._renderTemplate(this));
   

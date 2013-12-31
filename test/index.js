@@ -115,19 +115,19 @@ test('templates', function (t) {
       templates: {'.inner-template1': element('<div class="child-template">child template</div>').one()}
     });
     
-    var oldRender = users._render;
+    var oldRender = users._renderTemplates;
     
     users.rendered = false;
     users._trigger({}, false);
-    users._render = sinon.spy();
+    users._renderTemplates = sinon.spy();
     usersFriends._trigger({}, false);
     
     t.ok(users.rendered, 'value tracks rendered state');
-    t.notOk(users._render.called, 'skips render method if already rendered');
+    t.notOk(users._renderTemplates.called, 'skips render method if already rendered');
     t.ok(usersFriends.rendered, 'rendered child template');
     
     users.rendered = false;
-    users._render = oldRender;
+    users._renderTemplates = oldRender;
     users._trigger({}, false);
     
     t.equal(route._routes['users.friends'].rendered, false, 'rendered reset to false');
