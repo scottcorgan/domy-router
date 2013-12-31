@@ -1,11 +1,18 @@
 # domy-router
  
-PushState  URL driven DOM element swapping. For use with [Browserify](http://browserify.org).
+PushState  URL driven DOM element swapping. A router that uses css selectors to render route templates. For use with [Browserify](http://browserify.org).
 
 Part of the [Domy module collection](https://github.com/scottcorgan/domy).
 
 [![browser support](https://ci.testling.com/scottcorgan/domy-router.png)](https://ci.testling.com/scottcorgan/domy-router)
- 
+
+### What you get
+
+* Modular. Works on its own.
+* automatic and multiple view rendering for routes
+* nested routes for partial view updating
+* pre-route rendering callbacks
+* CommonJS/Browserify/Npm power!
  
 ## Install
  
