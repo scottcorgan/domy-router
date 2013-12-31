@@ -113,6 +113,8 @@ route.naviagate('/some-route');
 
 ### route(name[, options, callbacks]);
 
+Each route will get rendered only once. If the route has been rendered, it simply skips the rendering step, but performs every other route sequence.
+
 * `path` - the name of the route. Used to create nested routes.
 * `options` - options to set on the route
   * `url` - the url of the route. If it is a nested route, it will be prepended with its parent route
@@ -130,7 +132,7 @@ var route = router();
 var someTemplate = document.createElement('div');
 someTemplate.innerHTML = 'My Template';
 
-route('someRoute', {
+var someRoute = route('someRoute', {
   url: '/some-route',
   templates: {
     '#templateElement': someTemplate
@@ -144,10 +146,24 @@ route('someRoute', {
 }));
 ```
 
-### 
+## Nested Routes
 
-### 
+Nested routes are simple and they give you the ability to render or update only a given set of elements within the parent template. To use nested routes, you simply create a route, then you create a child route from that route:
 
+```js
+var router = require('domy-router');
+var route = router();
+
+var parentRoute = route('parentRoute', {
+  url '/parent-route'
+});
+
+var childRoute = parentRoute.route('childRoute', {
+  url: '/child-route' // this becomes /parent-route/child-route
+});
+```
+
+If you include the `templates` options for the child route, it will not re-render the parent templates, but only the child templates.
  
 ## Run Tests
  
