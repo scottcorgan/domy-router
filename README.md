@@ -109,7 +109,7 @@ The instance is both a function and an object. The function generates a new rout
 var router = require('domy-router');
 var route = router();
 
-route.naviagate('/some-route');
+route.navigate('/some-route');
 ```
 
 ### route(name[, options, callbacks]);
