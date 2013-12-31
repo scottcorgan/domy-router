@@ -211,6 +211,8 @@ var users = route('users', {
 
 ## Run Tests
  
+Requires [Phantomjs](phantomjs.org/download.html) is installed
+ 
 ```
 npm install
 npm test
