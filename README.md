@@ -199,8 +199,8 @@ var users = route('users', {
    url: '/users/:id'
 }, function (ctx, next) {
   usersModel.getById(ctx.params.id, function (users) {
-   ctx.users = users;
-   next();
+    ctx.users = users;
+    next();
   });
 }, function (ctx, next) {
   // ctx.users is now available
