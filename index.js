@@ -16,7 +16,6 @@ module.exports = function (options) {
   };
   
   router._routes = {};
-  router.pushState = options.pushState || false;
     
   router._record = function (routeName, options) {
     options = options || {};

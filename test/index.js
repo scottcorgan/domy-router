@@ -4,28 +4,8 @@ var sinon = require('sinon');
 var element = require('domy-element');
 var insert = require('domy-insert');
 var children = require('domy-children');
-
 var container = insert('<div class="container"></div>').end();
 
-test('sets up router', function (t) {
-  t.test('defaults', function (t) {
-    var route = router();
-    
-    t.equal(route.pushState, false, 'defaults to no pushstate');
-    t.end();
-  });
-  
-  t.test('override defaults', function (t) {
-    var route = router({
-      pushState: true
-    });
-    
-    t.equal(route.pushState, true, 'pushState set to true');
-    t.end();
-  });
-  
-  t.end();
-});
 
 test('names a route', function (t) {
   var route = router();
@@ -62,10 +42,7 @@ test('creates a nested route', function (t) {
 });
 
 test('templates', function (t) {
-  var route = router({
-    pushState: true
-  });
-  
+  var route = router();
   var users = route('users', {
     url: '/users',
     templates: {'.container': element('<div class="inner-template1"></div>').one(),}
@@ -145,7 +122,7 @@ test('executes route callback chain', function (t) {
     t.ok(next, 'provdes callback');
     next();
   }, function (ctx) {
-    t.ok(ctx, 'provices the context');
+    t.ok(ctx, 'provides the context');
     t.end();
   });
   
