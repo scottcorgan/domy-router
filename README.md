@@ -20,17 +20,27 @@ npm install domy-router --save
 ```js
 var router = require('domy-router');
 var route = router();
+
 var someDomElement = document.createElement('div');
+someDomElement.className = 'some-element';
+
 var anotherDomElement = document.createElement('div');
 
 var route1 = route('route1', {
   url: '/route1',
   templates: {
-    '#view-container': someDomElement // mapped to css selector
+    '#view-container': someDomElement // fills css selector with dom element
   }
 });
 
 route1.navigate();
+
+// Generates:
+// <div id="view-container">
+//   <div class="some-element"></div>
+// </div>
+
+
 
 // Nested Routes
 
@@ -42,6 +52,11 @@ var childRoute = route1.route('childRoute', {
 });
 
 childRoute.navigate(); // navigates to /route1/childRoute
+
+// Generates:
+// <div id="view-container">
+//   <div class="some-element"><div></div></div>
+// </div>
 ```
  
 ### With Parameters
