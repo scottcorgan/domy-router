@@ -136,10 +136,11 @@ route('someRoute', {
     '#templateElement': someTemplate
   }
 }, function (ctx, next) {
- ctx.someValue = 'NPM';
- next();
+  ctx.someValue = 'NPM';
+  next();
 }, function (ctx, next) {
- // ctx.someValue is now available to me
+  // ctx.someValue is now available to me
+  next();
 }));
 ```
 
