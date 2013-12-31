@@ -165,6 +165,24 @@ var childRoute = parentRoute.route('childRoute', {
 
 If you include the `templates` options for the child route, it will not re-render the parent templates, but only the child templates.
  
+## Route Templates
+
+A powerful feature of **domy-router** is it's ability to map dom elements/templates to css selectors. This lets you update any number of areas in the html on route change. It gets even more useful when with nested routes. You can update multiple areas of parent template on route change.
+
+```js
+var router = require('domy-router');
+var route = router();
+var usersList = require('./templates/users-list.js');
+
+var users = route('users', {
+  url: '/users',
+  templates: {
+    '#users-list': usersList,
+    '#users-online': usersOnline
+  }
+});
+```
+
 ## Run Tests
  
 ```
