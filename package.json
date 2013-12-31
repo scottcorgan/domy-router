@@ -4,7 +4,8 @@
   "description": "URL driven DOM element swapping",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/testling"
+    "test": "node_modules/.bin/testling",
+    "test-build": "browserify index.js > bundle.js && ls -l && rm bundle.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,8 @@
     "domy-element": "~0.4.0",
     "domy-insert": "~0.2.3",
     "page": "~1.3.7",
-    "domy-children": "~0.2.7"
+    "domy-children": "~0.2.7",
+    "sinon": "~1.7.3"
   },
   "testling": {
     "files": [

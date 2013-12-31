@@ -1,27 +1,25 @@
 var router = require('../index.js');
 var test = require('tape');
+var sinon = require('sinon');
 var element = require('domy-element');
 var insert = require('domy-insert');
 var children = require('domy-children');
+
+var container = insert('<div class="container"></div>').end();
 
 test('sets up router', function (t) {
   t.test('defaults', function (t) {
     var route = router();
     
     t.equal(route.pushState, false, 'defaults to no pushstate');
-    t.deepEqual(route.container, element('body').one(), 'defaults to body element');
     t.end();
   });
   
   t.test('override defaults', function (t) {
-    var container = insert('<div class="container"></div>').end();
-    
     var route = router({
-      container: '.container',
       pushState: true
     });
     
-    t.deepEqual(route.container, element('.container').one(), 'container is an element with class "container"');
     t.equal(route.pushState, true, 'pushState set to true');
     t.end();
   });
@@ -64,39 +62,103 @@ test('creates a nested route', function (t) {
 });
 
 test('templates', function (t) {
-  insert('<div id="template1"></div>').end('.container');
-  // insert('<div class="random-div"></div>').end('.container');
-  
   var route = router({
     pushState: true
   });
   
   var users = route('users', {
     url: '/users',
-    templates: {
-      '#template1': element('<div class="inner-template1"></div>').one(),
-    }
+    templates: {'.container': element('<div class="inner-template1"></div>').one(),}
   });
   
   t.ok(users.router.engine, 'route has router engine');
   t.ok(users._trigger, 'has trigger method');
   
   t.test('replaces router conatiner with templates', function (t) {
-    users._trigger(false);
+    users._trigger({}, false);
     
     var innerTemplate1 = element('.inner-template1').one();
     
     t.equal(innerTemplate1.className, 'inner-template1', 'appended template 1');
-    t.equal(children('#template1').count(), 1);
+    t.equal(children('.container').count(), 1);
     
     t.end();
   });
   
+  t.test('child route also renders parent route', function (t) {
+    element('.container').one().innerHTML = '';
+    
+    users.rendered = false;
+    
+    var usersFriends = users.route('friends', {
+      url: '/friends',
+      templates: {'.inner-template1': element('<div class="child-template"></div>').one()}
+    });
+    
+    usersFriends._trigger({}, false);
+    
+    t.ok(element('.inner-template1').one(), 'parent template was rendered');
+    t.ok(element('.inner-template1').one('.child-template'), 'rendered child template');
+    t.end();
+  });
+  
+  t.test('caches the rendering of parent templates', function (t) {
+    element('.container').one().innerHTML = '';
+    
+    var route = router();
+    var users = route('users', {
+      url: '/users',
+      templates: {'.container': element('<div class="inner-template1">inner template 1</div>').one(),}
+    });
+    var usersFriends = users.route('friends', {
+      url: '/friends',
+      templates: {'.inner-template1': element('<div class="child-template">child template</div>').one()}
+    });
+    
+    var oldRender = users._render;
+    
+    users.rendered = false;
+    users._trigger({}, false);
+    users._render = sinon.spy();
+    usersFriends._trigger({}, false);
+    
+    t.ok(users.rendered, 'value tracks rendered state');
+    t.notOk(users._render.called, 'skips render method if already rendered');
+    t.ok(usersFriends.rendered, 'rendered child template');
+    
+    users.rendered = false;
+    users._render = oldRender;
+    users._trigger({}, false);
+    
+    t.equal(route._routes['users.friends'].rendered, false, 'rendered reset to false');
+    t.ok(users.rendered, 'parent route is still set as rendered');
+    t.end();
+  });
   
   t.end();
 });
 
-
+test('before and after callbacks', function (t) {
+  var route = router();
+  
+  var tasks = route('tasks', {
+    before: function (ctx, next) {
+      t.equal(ctx.params.param1, 'param1', 'passes parameters to before method');
+      t.ok(next, 'passes through callback');
+      
+      ctx.testValue = 'testing';
+      next();
+    },
+    
+    after: function (ctx) {
+      t.equal(ctx.params.param1, 'param1', 'passes parameters to after method');
+      t.equal(ctx.testValue, 'testing', 'passes through values on the context object')
+      t.end();
+    }
+  });
+  
+  tasks._trigger({ params: { param1: 'param1' } }, false);
+});
 
 
 

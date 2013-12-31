@@ -1,6 +1,7 @@
 var element = require('domy-element');
 var __routerEngine = require('page');
 
+// Sets everything up
 module.exports = function (options) {
   options = options || {};
   
@@ -13,9 +14,6 @@ module.exports = function (options) {
   
   router._routes = {};
   router.pushState = options.pushState || false;
-  router.container = (options.container)
-    ? element(options.container).one()
-    : element('body').one();
     
   router.record = function (routeName, options) {
     options = options || {};
@@ -34,8 +32,17 @@ module.exports = function (options) {
       : childUrl;
   };
   
-  router.empty = function () {
-    router.container.innerHTML = '';
+  // Reset cache for current and child templates
+  router.resetRenderedChildren = function (parent) {
+    Object.keys(router._routes).forEach(function (routeName) {
+      if (!parent) return;
+      
+      var len = parent.name.length;
+      
+      if (routeName.substring(0, len) === parent.name) {
+        router._routes[routeName].rendered = false;
+      }
+    });
   };
   
   router.engine = __routerEngine;
@@ -51,7 +58,20 @@ var Route = function (name, options) {
   this.url = this.router._buildUrl(options.parent, options.url);
   this.templates = options.templates || {};
   
+  this.before = options.before || function (params, next) {next();};
+  this.after = options.after || function () {};
+  
   this.router.record(this.name, options);
+  
+  // this.router.engine(this.url, function (ctx, next) {
+  //   // before
+  //   next();
+  // }, function (ctx, next) {
+  //   // handler
+  //   next();
+  // }, function (ctx) {
+  //   // after
+  // });
 };
 
 Route.prototype.route = function (name, options) {
@@ -63,14 +83,32 @@ Route.prototype.route = function (name, options) {
   return new Route(name, options);
 };
 
-Route.prototype._trigger = function (changeRoute) {
+Route.prototype._trigger = function (ctx, changeRoute) {
   var self = this;
   
-  Object.keys(this.templates).forEach(function (selector) {
-    var template = element(self.templates[selector]).one();
-    
-    element(selector).one().innerHTML = template.outerHTML;
+  this.before(ctx, function () {
+    if (!self.rendered) self._renderTemplates(ctx);
+    if (changeRoute === undefined || changeRoute === true) self.router.engine(self.url);
+    self.after(ctx);
   });
+};
+
+Route.prototype._renderTemplates = function (ctx) {
+  var self = this;
   
-  if (changeRoute === undefined || changeRoute === true) this.router.engine(this.url); 
+  // Set up parent
+  // reset child templates rendered value
+  this.router.resetRenderedChildren(this.options.parent);
+  if (this.options.parent) this.options.parent._trigger(ctx, false);
+  
+  Object.keys(this.templates).forEach(this._renderTemplate(this));
+  
+  this.rendered = true;
+};
+
+Route.prototype._renderTemplate = function (context) {
+  return function (selector) {
+    var template = element(context.templates[selector]).one();
+    element(selector).one().innerHTML = template.outerHTML;
+  };
 };
