@@ -9,9 +9,9 @@ Part of the [Domy module collection](https://github.com/scottcorgan/domy).
 ### What you get
 
 * Modular. Works on its own.
-* automatic and multiple view rendering for routes
-* nested routes for partial view updating
-* pre-route rendering callbacks
+* Automatic and multiple view rendering for routes
+* Nested routes for partial view updating
+* Pre-route rendering callbacks
 * CommonJS/Browserify/Npm power!
  
 ## Install
@@ -87,6 +87,15 @@ var user = route('userById', {
 
 route.navigate('/users/123');
 ```
+
+## Instance
+
+### router()
+
+* Factory to set up a new instance of the Domy router. The instance is both a function and an object. The function generates a new route. The object performs basic routing actions suchs as:
+  * `navigate(path)` - navigates to the given path
+
+## Instance Methods
 
  
 ## Run Tests
