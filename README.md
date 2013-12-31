@@ -173,14 +173,17 @@ A powerful feature of **domy-router** is it's ability to map dom elements/templa
 var router = require('domy-router');
 var route = router();
 var usersList = require('./templates/users-list.js');
+var usersOnline = require('./templates/users-online.js');
 
 var users = route('users', {
   url: '/users',
   templates: {
-    '#users-list': usersList,
-    '#users-online': usersOnline
+    '#users-list': usersList, // programmatically created DOM element
+    '#users-online': usersOnline // programmatically created DOM element
   }
 });
+
+route.navigate('/users');
 ```
 
 ## Run Tests
