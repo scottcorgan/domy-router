@@ -75,14 +75,15 @@ var someDomElement = document.createElement('div');
 
 var user = route('userById', {
   url: '/users/:id',
-  tempaltes: {
+  templates: {
     '#user-view': someDomElement
   }
 }, function (ctx, next) {
   // Works like middleware
   next();
-}, function (ctx) {
+}, function (ctx, next) {
   // ctx.params.id maps to the ":id" parameter in the url
+  next();
 });
 
 route.navigate('/users/123');
