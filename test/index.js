@@ -171,7 +171,6 @@ test('before and after callbacks', function (t) {
 
 // var users = route('users', {
 //   url: '/users',
-//   template: usersTemplate,
 //   templates: {
 //     '#some-element': someTemplate
 //   },

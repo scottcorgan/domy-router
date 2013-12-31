@@ -63,6 +63,11 @@ var Route = function (name, options) {
   
   this.router.record(this.name, options);
   
+  
+  
+  // TODO: figure out out to handle routing and testing
+  // for that routing
+  
   // this.router.engine(this.url, function (ctx, next) {
   //   // before
   //   next();
