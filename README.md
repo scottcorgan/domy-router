@@ -186,6 +186,28 @@ var users = route('users', {
 route.navigate('/users');
 ```
 
+## Route Callback Chains
+
+Each route gives you the ability to have any number of callbacks execute before the route renders the templates. THis is useful for authentication, retreiver user information, showing a loader, etc.
+
+```js
+var router = require('domy-router');
+var route = router();
+var usersModel = require('./models/users');
+
+var users = route('users', {
+   url: '/users/:id'
+}, function (ctx, next) {
+  usersModel.getById(ctx.params.id, function (users) {
+   ctx.users = users;
+   next();
+  });
+}, function (ctx, next) {
+  // ctx.users is now available
+  next();
+});
+```
+
 ## Run Tests
  
 ```
