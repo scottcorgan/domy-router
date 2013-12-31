@@ -1,5 +1,6 @@
 var element = require('domy-element');
 var __routerEngine = require('page');
+var page = require('page');
 
 // Sets everything up
 module.exports = function (options) {
@@ -9,13 +10,15 @@ module.exports = function (options) {
     options = options || {};
     options.router = options.router || router;
     
-    return new Route(name, options);
+    var callbacks = [].slice.call(arguments, 2);
+    
+    return new Route(name, options, callbacks);
   };
   
   router._routes = {};
   router.pushState = options.pushState || false;
     
-  router.record = function (routeName, options) {
+  router._record = function (routeName, options) {
     options = options || {};
     router._routes[routeName] = options;
   };
@@ -29,7 +32,7 @@ module.exports = function (options) {
   router._buildUrl = function (parent, childUrl) {
     return (parent && childUrl)
       ? parent.url + childUrl
-      : childUrl;
+      : childUrl || '/';
   };
   
   // Reset cache for current and child templates
@@ -45,38 +48,39 @@ module.exports = function (options) {
     });
   };
   
+  router.navigate = function (path) {
+    router.engine(path);
+  };
+  
   router.engine = __routerEngine;
   
   return router;
 };
 
 // Route
-var Route = function (name, options) {
+var Route = function (name, options, callbacks) {
+  var self = this;
+  
   this.router = options.router;
   this.options = options;
   this.name = this.router._buildName(options.parent, name);
   this.url = this.router._buildUrl(options.parent, options.url);
   this.templates = options.templates || {};
-  
   this.before = options.before || function (params, next) {next();};
   this.after = options.after || function () {};
+  this.callbacks = callbacks || [];
   
-  this.router.record(this.name, options);
+  // Add the template render method
+  // to the end of the method chain
+  this.callbacks.push(function (ctx) {
+    self.render(ctx);
+  });
   
+  // Track the routes internally
+  this.router._record(this.name, options);
   
-  
-  // TODO: figure out out to handle routing and testing
-  // for that routing
-  
-  // this.router.engine(this.url, function (ctx, next) {
-  //   // before
-  //   next();
-  // }, function (ctx, next) {
-  //   // handler
-  //   next();
-  // }, function (ctx) {
-  //   // after
-  // });
+  // attach the callbacks to our routes
+  this.router.engine.apply(this.router.engine, [this.url].concat(this.callbacks));
 };
 
 Route.prototype.route = function (name, options) {
@@ -88,12 +92,13 @@ Route.prototype.route = function (name, options) {
   return new Route(name, options);
 };
 
-Route.prototype._trigger = function (ctx, changeRoute) {
+Route.prototype.render = function (ctx, changeRoute) {
+  ctx = ctx || {};
+  
   var self = this;
   
   this.before(ctx, function () {
     if (!self.rendered) self._renderTemplates(ctx);
-    if (changeRoute === undefined || changeRoute === true) self.router.engine(self.url);
     self.after(ctx);
   });
 };
@@ -103,7 +108,7 @@ Route.prototype._renderTemplates = function (ctx) {
   
   // Set up parent
   // reset child templates rendered value
-  if (this.options.parent) this.options.parent._trigger(ctx, false);
+  if (this.options.parent) this.options.parent.render(ctx, false);
   this.router.resetRenderedChildren(this.options.parent);
   
   Object.keys(this.templates).forEach(this._renderTemplate(this));
@@ -116,4 +121,10 @@ Route.prototype._renderTemplate = function (context) {
     var template = element(context.templates[selector]).one();
     element(selector).one().innerHTML = template.outerHTML;
   };
+};
+
+// TODO: naviage should take a set of arguments
+// that map to the wildcard argumetns in the route path
+Route.prototype.navigate = function () {
+  this.router.navigate(this.url);
 };

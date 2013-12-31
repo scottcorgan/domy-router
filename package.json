@@ -1,6 +1,6 @@
 {
   "name": "domy-router",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "URL driven DOM element swapping",
   "main": "index.js",
   "scripts": {
