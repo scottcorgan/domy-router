@@ -1,6 +1,6 @@
 {
   "name": "domy-router",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "PushState URL driven DOM element swapping",
   "main": "index.js",
   "scripts": {

@@ -65,8 +65,6 @@ var Route = function (name, options, callbacks) {
   this.name = this.router._buildName(options.parent, name);
   this.url = this.router._buildUrl(options.parent, options.url);
   this.templates = options.templates || {};
-  this.before = options.before || function (params, next) {next();};
-  this.after = options.after || function () {};
   this.callbacks = callbacks || [];
   
   // Add the template render method
@@ -96,10 +94,7 @@ Route.prototype.render = function (ctx, changeRoute) {
   
   var self = this;
   
-  this.before(ctx, function () {
-    if (!self.rendered) self._renderTemplates(ctx);
-    self.after(ctx);
-  });
+  if (!self.rendered) self._renderTemplates(ctx);
 };
 
 Route.prototype._renderTemplates = function (ctx) {
