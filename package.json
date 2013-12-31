@@ -1,7 +1,7 @@
 {
   "name": "domy-router",
   "version": "0.0.2",
-  "description": "URL driven DOM element swapping",
+  "description": "PushState URL driven DOM element swapping",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/testling",
@@ -41,7 +41,7 @@
       "safari/5.1..latest",
       "ipad/6.0..latest",
       "iphone/6.0..latest",
-      "android-browser/4.1..latest"
+      "android-browser/4.2..latest"
     ]
   },
   "dependencies": {

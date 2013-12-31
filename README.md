@@ -1,6 +1,6 @@
 # domy-router
  
-URL driven DOM element swapping. For use with [Browserify](http://browserify.org).
+PushState  URL driven DOM element swapping. For use with [Browserify](http://browserify.org).
 
 Part of the [Domy module collection](https://github.com/scottcorgan/domy).
 
